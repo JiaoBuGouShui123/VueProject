@@ -23,7 +23,7 @@
 
   <!-- 导航栏 -->
     <div class="con3">
-      <el-menu mode="horizontal" :ellipsis="false" class="nav-menu">
+      <el-menu mode="horizontal" :ellipsis="false" class="nav-menu" @select="handleSelect">
         <el-menu-item index="1">采集平台</el-menu-item>
 
         <el-sub-menu index="2">
@@ -39,7 +39,7 @@
         <el-sub-menu index="4">
           <template #title>信息查询</template>
           <el-menu-item index="4-1">查询个人信息</el-menu-item>
-          <el-menu-item index="4-2">学籍预警查询</el-menu-item>
+          <el-menu-item index="4-2">成绩查询</el-menu-item>
           <el-menu-item index="4-3">毕业审核结果核查</el-menu-item>
         </el-sub-menu>
 
@@ -81,6 +81,15 @@ function logout() {
 function Userinfo() {
   router.push('/userinfo')
 }
+
+const handleSelect = (key, keyPath)=> {
+  console.log(key, keyPath);
+  if (key === '4-2') {
+    router.push('/grade')
+  }
+}
+
+
 </script>
 
 <style scoped>
