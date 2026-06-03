@@ -1,6 +1,6 @@
 # 310242-vuePro
 
-This template should help get you started developing with Vue 3 in Vite.
+只是一个垃圾堆作业
 
 ## Recommended IDE Setup
 

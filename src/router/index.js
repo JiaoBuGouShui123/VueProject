@@ -4,7 +4,7 @@ import LoginView from '../views/Login/index.vue'
 import Home from '../views/home/index.vue'
 import UserInfo from '../views/userinfo/index.vue'
 import GradeView from '../views/Grade/index.vue'
-
+import NotisDetail from '../views/noticedetail/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,8 +32,13 @@ const router = createRouter({
       path: '/grade',
       name: 'grade',
       component: GradeView,
+    },
+    {
+      path: '/noticedetail/:id',
+      name: 'noticedetail',
+      component: NotisDetail,
     }
-    
+
   ],
 })
 
@@ -47,5 +52,8 @@ const router = createRouter({
 //   }
 //   return true
 // })
+
+
+
 
 export default router
