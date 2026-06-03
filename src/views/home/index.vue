@@ -71,7 +71,7 @@
 
     <!-- 内容区 -->
     <div class="content-area">
-      <!-- 帖子卡片 -->
+      <!-- 帖子卡片：通知公告 -->
       <div class="post-card">
         <div class="post-author">
           <div class="author-info">
@@ -85,9 +85,9 @@
           </div>
         </div>
         <div class="post-preview">
-          <div v-for = "(item,index) in Notices" :key = "index" class = "post-item" @click="GotoDetail(item.id)">
+          <div v-for="(item, index) in Notices" :key="index" class="post-item" @click="GotoDetail(item.id)">
             <div class="post-item-left">
-              <span v-if = "item.zd" class="post-tag--top">【置顶】</span>
+              <span v-if="item.zd" class="post-tag--top">【置顶】</span>
               <span class="post-tag--notice">【通知】</span>
               <span class="post-title">{{ item.title }}</span>
             </div>
@@ -96,12 +96,24 @@
         </div>
       </div>
 
-      <div class="post-card post-card--large">
+      <!-- 帖子卡片1：校园新闻（无限滚动） -->
+      <div class="post-card1">
         <div class="post-author"></div>
-        <div class="post-preview"></div>
+        <div class="post-preview post-preview--scroll" v-infinite-scroll="loadMore" :infinite-scroll-disabled="disabled" infinite-scroll-distance="10">
+          <div v-for="(item, index) in newsList" :key="index" class="post-item">
+            <div class="post-item-left">
+              <span class="post-tag--notice">【新闻】</span>
+              <span class="post-title">{{ item.title }}</span>
+            </div>
+            <div class="post-time">{{ item.time }}</div>
+          </div>
+          <p v-if="loading" class="loading-tip">加载中...</p>
+          <p v-if="noMore" class="loading-tip">— 没有更多了 —</p>
+        </div>
       </div>
 
-      <div class="post-card post-card--large">
+      <!-- 帖子卡片2 -->
+      <div class="post-card2">
         <div class="post-author"></div>
         <div class="post-preview"></div>
       </div>
@@ -110,6 +122,7 @@
 </template>
 
 <script setup>
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 import Notices from '@/assets/data/notices.json'
@@ -136,7 +149,37 @@ function GotoDetail(id) {
   router.push('/noticedetail/' + id)
 }
 
+// ===== 无限滚动 =====
+const count = ref(10)
+const loading = ref(false)
 
+const allNews = [
+  { title: '我校在2025年江苏省职业院校技能大赛中荣获佳绩', time: '2025-04-20' },
+  { title: '学校召开本科层次职业教育专业建设研讨会', time: '2025-04-18' },
+  { title: '校领导带队赴企业开展访企拓岗专项行动', time: '2025-04-15' },
+  { title: '我校学子在蓝桥杯全国软件大赛中获得一等奖', time: '2025-04-12' },
+  { title: '学校举办2025年春季校园招聘会', time: '2025-04-10' },
+  { title: '关于组织申报2025年度校级科研项目的通知', time: '2025-04-08' },
+  { title: '我校获批3项教育部产学合作协同育人项目', time: '2025-04-05' },
+  { title: '计算机与通信学院开展网络安全主题讲座', time: '2025-04-03' },
+  { title: '学校召开2025年教学工作会议', time: '2025-03-30' },
+  { title: '我校师生在省级创新创业大赛中斩获金奖', time: '2025-03-28' },
+  { title: '后勤管理处开展校园食品安全专项检查', time: '2025-03-25' },
+  { title: '关于图书馆延长开放时间的通知', time: '2025-03-22' },
+]
+
+const newsList = computed(() => allNews.slice(0, count.value))
+
+const noMore = computed(() => count.value >= allNews.length)
+const disabled = computed(() => loading.value || noMore.value)
+
+function loadMore() {
+  loading.value = true
+  setTimeout(() => {
+    count.value += 4
+    loading.value = false
+  }, 1000)
+}
 </script>
 
 <style scoped>
@@ -233,7 +276,15 @@ function GotoDetail(id) {
   height: 200px;
 }
 
-.post-card--large {
+.post-card1 {
+  display: flex;
+  gap: 5px;
+  height: 280px;
+}
+
+.post-card2 {
+  display: flex;
+  gap: 5px;
   height: 280px;
 }
 
@@ -252,6 +303,10 @@ function GotoDetail(id) {
   flex-direction: column;
   justify-content: space-between;
   background-color: #fff;
+}
+
+.post-preview--scroll {
+  overflow: auto;
 }
 
 /* ---- 帖子行：左侧元素 + 右侧日期 ---- */
@@ -306,6 +361,13 @@ function GotoDetail(id) {
   font-size: 13px;
 }
 
+.loading-tip {
+  text-align: center;
+  color: #909399;
+  font-size: 13px;
+  padding: 10px 0;
+}
+
 /* ---- 作者信息行：头像 + 文字 ---- */
 .author-info {
   display: flex;
@@ -347,7 +409,6 @@ function GotoDetail(id) {
   font-size: 14px;
   color: #909399;
 }
-
 </style>
 
 <style>
