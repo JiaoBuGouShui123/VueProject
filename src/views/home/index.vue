@@ -66,14 +66,26 @@
 
   <!-- 主体内容区 -->
   <div class="main-body">
-    <!-- 侧边栏 -->
-    <div class="sidebar"></div>
+    <!-- 侧边栏 我的应用 -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <span>我的应用</span>
+        <Setting class="sidebar-setting" @click="openSetting" />
+      </div>
+      <el-divider style="margin-top: 10px; margin-bottom: 0;" />
+      <div class="apps-grid">
+        <div v-for="(app, index) in appsWithIcons" :key="index" class="app-item" @click="app.func">
+          <img :src="app.iconUrl" class="app-icon">
+          <span class="app-name">{{ app.name }}</span>
+        </div>
+      </div>
+    </div>
 
     <!-- 内容区 -->
     <div class="content-area">
       <!-- 帖子卡片：通知公告 -->
       <div class="post-card">
-        <div class="post-author">
+        <div class="post-left">
           <div class="author-info">
             <div class="author-avatar">
               <img src="@/assets/touxiang.jpg">
@@ -98,7 +110,7 @@
 
       <!-- 帖子卡片1：校园新闻（无限滚动） -->
       <div class="post-card1">
-        <div class="post-author"></div>
+        <div class="post-left"></div>
         <div class="post-preview post-preview--scroll" v-infinite-scroll="loadMore" :infinite-scroll-disabled="disabled" infinite-scroll-distance="10">
           <div v-for="(item, index) in newsList" :key="index" class="post-item">
             <div class="post-item-left">
@@ -112,9 +124,31 @@
         </div>
       </div>
 
-      <!-- 帖子卡片2 -->
+      <!-- 帖子卡片2：课程表 -->
       <div class="post-card2">
-        <div class="post-author"></div>
+        <div class="post-left post-left--schedule">
+          <div class="schedule-wrap">
+            <div class="schedule-title">课程表</div>
+            <el-table :data="scheduleData" border stripe class="schedule-table">
+              <el-table-column prop="period" label="节次" width="70" align="center" />
+              <el-table-column prop="mon" label="周一" align="center">
+                <template #default="{ row }">{{ row.mon || '—' }}</template>
+              </el-table-column>
+              <el-table-column prop="tue" label="周二" align="center">
+                <template #default="{ row }">{{ row.tue || '—' }}</template>
+              </el-table-column>
+              <el-table-column prop="wed" label="周三" align="center">
+                <template #default="{ row }">{{ row.wed || '—' }}</template>
+              </el-table-column>
+              <el-table-column prop="thu" label="周四" align="center">
+                <template #default="{ row }">{{ row.thu || '—' }}</template>
+              </el-table-column>
+              <el-table-column prop="fri" label="周五" align="center">
+                <template #default="{ row }">{{ row.fri || '—' }}</template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
         <div class="post-preview"></div>
       </div>
     </div>
@@ -125,14 +159,40 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { Setting } from '@element-plus/icons-vue'
+import { ElMessageBox } from 'element-plus'
 import Notices from '@/assets/data/notices.json'
+import scheduleData from '@/assets/data/schedule.json'
+import apps from '@/assets/data/apps.json'
+
+// 预加载 assets 目录下所有图标
+const iconModules = import.meta.glob('../../assets/ico_but*.png', { eager: true })
+const iconMap = {}
+for (const [path, mod] of Object.entries(iconModules)) {
+  const filename = path.split('/').pop()
+  iconMap[filename] = mod.default
+}
+
+// 为每个 app 解析图标 URL
+const appsWithIcons = computed(() => apps.map(app => ({
+  ...app,
+  iconUrl: iconMap[app.img] || ''
+})))
 
 const router = useRouter()
+
+function openSetting() {
+  ElMessageBox.alert('这是一个弹窗', '提示', {
+    confirmButtonText: '确定',
+  })
+}
 
 function logout() {
   localStorage.removeItem('user')
   router.push('/login')
 }
+
+
 
 function Userinfo() {
   router.push('/userinfo')
@@ -180,6 +240,8 @@ function loadMore() {
     loading.value = false
   }, 1000)
 }
+
+
 </script>
 
 <style scoped>
@@ -259,6 +321,48 @@ function loadMore() {
   background-color: #fff;
 }
 
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px 0;
+  font-size: 25px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.sidebar-header :deep(svg) {
+  width: 25px;
+  height: 25px;
+}
+
+/* ---- 应用网格 ---- */
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px 8px;
+  padding: 16px 12px;
+}
+
+.app-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.app-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.app-name {
+  font-size: 12px;
+  color: #606266;
+  text-align: center;
+}
+
 /* ---- 内容区 ---- */
 .content-area {
   width: 75%;
@@ -285,15 +389,38 @@ function loadMore() {
 .post-card2 {
   display: flex;
   gap: 5px;
-  height: 280px;
+  height: 220px;
 }
 
 /* ---- 帖子左侧：作者信息 ---- */
-.post-author {
+.post-left {
   width: 40%;
   display: flex;
   align-items: center;
   background-color: #fff;
+}
+
+.post-left--schedule {
+  align-items: flex-start;
+  overflow: auto;
+}
+
+/* ---- 课程表 ---- */
+.schedule-wrap {
+  width: 100%;
+  padding: 12px 10px;
+}
+
+.schedule-title {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: #303133;
+  margin-bottom: 10px;
+}
+
+.schedule-table {
+  font-size: 12px;
 }
 
 /* ---- 帖子右侧：内容预览 ---- */
@@ -409,6 +536,7 @@ function loadMore() {
   font-size: 14px;
   color: #909399;
 }
+
 </style>
 
 <style>
