@@ -1,30 +1,36 @@
 [
   {
+    "id": 1,
     "img": "ico_but6.png",
     "name": "课表查询",
     "func": ""
   },
   {
+    "id": 2,
     "img": "ico_but34.png",
     "name": "个人信息查询",
     "func": ""
   },
   {
-    "img": "ico_but65.png",
-    "name": "班级信息查询",
-    "func": ""
-  },
-  {
+    "id": 3,
     "img": "ico_but73.png",
     "name": "成绩查询",
     "func": ""
   },
   {
+    "id": 4,
+    "img": "ico_but65.png",
+    "name": "班级信息查询",
+    "func": ""
+  },
+  {
+    "id": 5,
     "img": "ico_but78.png",
     "name": "学生选课",
     "func": ""
   },
   {
+    "id": 6,
     "img": "ico_but81.png",
     "name": "任课教师查询",
     "func": ""

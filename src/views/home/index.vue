@@ -74,7 +74,7 @@
       </div>
       <el-divider style="margin-top: 10px; margin-bottom: 0;" />
       <div class="apps-grid">
-        <div v-for="(app, index) in appsWithIcons" :key="index" class="app-item" @click="app.func">
+        <div v-for="(app, index) in appsWithIcons" :key="index" class="app-item" @click="gotoApp(app.id)">
           <img :src="app.iconUrl" class="app-icon">
           <span class="app-name">{{ app.name }}</span>
         </div>
@@ -110,7 +110,30 @@
 
       <!-- 帖子卡片1：校园新闻（无限滚动） -->
       <div class="post-card1">
-        <div class="post-left"></div>
+        <div class="post-left post-left--tabs">
+          <el-tabs v-model="infoTab" class="info-tabs">
+            <el-tab-pane label="成绩" name="grade">
+              <div class="tab-list">
+                <div v-for="(item, index) in gradeList" :key="index" class="post-item">
+                  <div class="post-item-left">
+                    <span class="post-title">{{ item.course }}</span>
+                  </div>
+                  <div class="post-time">{{ item.score }}分</div>
+                </div>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="考试" name="exam">
+              <div class="tab-list">
+                <div v-for="(item, index) in examList" :key="index" class="post-item">
+                  <div class="post-item-left">
+                    <span class="post-title">{{ item.course }}</span>
+                  </div>
+                  <div class="post-time">{{ item.time }}</div>
+                </div>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
         <div class="post-preview post-preview--scroll" v-infinite-scroll="loadMore" :infinite-scroll-disabled="disabled" infinite-scroll-distance="10">
           <div v-for="(item, index) in newsList" :key="index" class="post-item">
             <div class="post-item-left">
@@ -149,7 +172,23 @@
             </el-table>
           </div>
         </div>
-        <div class="post-preview"></div>
+        <div class="post-preview post-preview--tabs">
+          <el-tabs v-model="activeTab" class="message-tabs">
+            <el-tab-pane label="消息" name="messages">
+              <div class="post-preview--scroll" v-infinite-scroll="loadMoreMsg" :infinite-scroll-disabled="msgDisabled" infinite-scroll-distance="10">
+                <div v-for="(item, index) in msgList" :key="index" class="post-item">
+                  <div class="post-item-left">
+                    <span class="post-tag--notice">{{ index % 2 === 0 ? '【停课通知】' : '【调课通知】' }}</span>
+                    <span class="post-title">{{ item.title }}</span>
+                  </div>
+                  <div class="post-time">{{ item.time }}</div>
+                </div>
+                <p v-if="msgLoading" class="loading-tip">加载中...</p>
+                <p v-if="msgNoMore" class="loading-tip">— 没有更多了 —</p>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
       </div>
     </div>
   </div>
@@ -209,6 +248,44 @@ function GotoDetail(id) {
   router.push('/noticedetail/' + id)
 }
 
+// 应用跳转映射
+const appRouteMap = {
+  1: '/schedule',
+  2: '/userinfo',
+  3: '/grade',
+  // 4: '/classinfo',
+  // 5: '/selectcourse',
+  // 6: '/teacherquery',
+}
+
+function gotoApp(id) {
+  if (appRouteMap[id]) {
+    router.push(appRouteMap[id])
+  }
+}
+
+// ===== 消息 Tab =====
+const activeTab = ref('messages')
+const infoTab = ref('grade')
+
+// ===== 成绩数据 =====
+const gradeList = [
+  { course: '高等数学', score: 85 },
+  { course: '大学英语', score: 78 },
+  { course: 'C语言程序设计', score: 92 },
+  { course: '数据结构', score: 88 },
+  { course: '计算机网络', score: 55 },
+]
+
+// ===== 考试数据 =====
+const examList = [
+  { course: '高等数学', time: '2025-06-20' },
+  { course: '大学英语', time: '2025-06-22' },
+  { course: 'C语言程序设计', time: '2025-06-25' },
+  { course: '数据结构', time: '2025-06-27' },
+  { course: '计算机网络', time: '2025-06-30' },
+]
+
 // ===== 无限滚动 =====
 const count = ref(10)
 const loading = ref(false)
@@ -238,6 +315,33 @@ function loadMore() {
   setTimeout(() => {
     count.value += 4
     loading.value = false
+  }, 1000)
+}
+
+// ===== 消息通知 =====
+const allMsgs = [
+  { title: '关于4月15日全校停课的通知', time: '2025-04-14' },
+  { title: '第10周周三5-6节调课通知', time: '2025-04-12' },
+  { title: '关于五一假期前后调课安排', time: '2025-04-10' },
+  { title: '4月20日机房停课维护通知', time: '2025-04-08' },
+  { title: '第11周周二3-4节调至周四', time: '2025-04-05' },
+  { title: '关于校运动会期间停课通知', time: '2025-04-01' },
+  { title: '第12周周五调课安排通知', time: '2025-03-28' },
+  { title: '关于清明节放假调课通知', time: '2025-03-25' },
+]
+
+const msgCount = ref(8)
+const msgLoading = ref(false)
+
+const msgList = computed(() => allMsgs.slice(0, msgCount.value))
+const msgNoMore = computed(() => msgCount.value >= allMsgs.length)
+const msgDisabled = computed(() => msgLoading.value || msgNoMore.value)
+
+function loadMoreMsg() {
+  msgLoading.value = true
+  setTimeout(() => {
+    msgCount.value += 4
+    msgLoading.value = false
   }, 1000)
 }
 
@@ -389,7 +493,7 @@ function loadMore() {
 .post-card2 {
   display: flex;
   gap: 5px;
-  height: 220px;
+  height: 260px;
 }
 
 /* ---- 帖子左侧：作者信息 ---- */
@@ -403,6 +507,34 @@ function loadMore() {
 .post-left--schedule {
   align-items: flex-start;
   overflow: auto;
+}
+
+.post-left--tabs {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.info-tabs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-tabs :deep(.el-tabs__content) {
+  flex: 1;
+  overflow: hidden;
+}
+
+.info-tabs :deep(.el-tabs__header) {
+  margin: 0;
+  padding: 0 12px;
+}
+
+.tab-list {
+  overflow: auto;
+  height: 100%;
 }
 
 /* ---- 课程表 ---- */
@@ -434,6 +566,28 @@ function loadMore() {
 
 .post-preview--scroll {
   overflow: auto;
+}
+
+.post-preview--tabs {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.message-tabs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-tabs :deep(.el-tabs__content) {
+  flex: 1;
+  overflow: hidden;
+}
+
+.message-tabs :deep(.el-tabs__header) {
+  margin: 0;
+  padding: 0 16px;
 }
 
 /* ---- 帖子行：左侧元素 + 右侧日期 ---- */
