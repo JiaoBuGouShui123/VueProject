@@ -1,0 +1,62 @@
+[
+  {
+    "img": "ico_but6.png",
+    "name": "课表查询2",
+    "func": "/classSchedule"
+  },
+  {
+    "img": "ico_but34.png",
+    "name": "个人信息查询2",
+    "func": "/userinfo"
+  },
+  {
+    "img": "ico_but65.png",
+    "name": "班级信息查询2",
+    "func": ""
+  },
+  {
+    "img": "ico_but73.png",
+    "name": "成绩查询2",
+    "func": "/grade"
+  },
+  {
+    "img": "ico_but78.png",
+    "name": "学生选课2",
+    "func": ""
+  },
+  {
+    "img": "ico_but81.png",
+    "name": "任课教师查询2",
+    "func": ""
+  },
+  {
+    "img": "ico_but82.png",
+    "name": "课表查询3",
+    "func": "/classSchedule"
+  },
+  {
+    "img": "ico_but81.png",
+    "name": "个人信息查询3",
+    "func": "/userinfo"
+  },
+  {
+    "img": "ico_but60.png",
+    "name": "班级信息查询3",
+    "func": ""
+  },
+  {
+    "img": "ico_but55.png",
+    "name": "成绩查询3",
+    "func": "/grade"
+  },
+  {
+    "img": "ico_but46.png",
+    "name": "学生选课3",
+    "func": ""
+  },
+  {
+    "img": "ico_but34.png",
+    "name": "任课教师查询3",
+    "func": ""
+  }
+]

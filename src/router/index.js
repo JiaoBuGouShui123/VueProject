@@ -6,7 +6,7 @@ import UserInfo from '../views/userinfo/index.vue'
 import GradeView from '../views/Grade/index.vue'
 import NotisDetail from '../views/noticedetail/index.vue'
 import ScheduleView from '../views/Schedule/index.vue'
-
+import ClassmateSearch from '../views/ClassmateSearch/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +44,11 @@ const router = createRouter({
       path: '/schedule',
       name: 'schedule',
       component: ScheduleView,
+    },
+    {
+      path: '/classmate',
+      name: 'classmate',
+      component: ClassmateSearch,
     },
 
   ],

@@ -192,6 +192,29 @@
       </div>
     </div>
   </div>
+
+  <!-- 修改应用弹窗 -->
+  <el-dialog v-model="dialogVisible" title="修改应用" width="700px">
+    <!-- 上半部分：我的应用 -->
+    <div class="dialog-label">我的应用</div>
+    <div class="apps-grid dialog-grid">
+      <div v-for="(app, index) in appsWithIcons" :key="'a' + index" class="app-item" @click="removeFromMyApps(index)">
+        <img :src="app.iconUrl" class="app-icon">
+        <span class="app-name">{{ app.name }}</span>
+      </div>
+    </div>
+
+    <el-divider />
+
+    <!-- 下半部分：全部应用 -->
+    <div class="dialog-label">全部应用</div>
+    <div class="apps-grid dialog-grid">
+      <div v-for="(app, index) in allAppsWithIcons" :key="'b' + index" class="app-item" @click="addToMyApps(index)">
+        <img :src="app.iconUrl" class="app-icon">
+        <span class="app-name">{{ app.name }}</span>
+      </div>
+    </div>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -199,10 +222,10 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { Setting } from '@element-plus/icons-vue'
-import { ElMessageBox } from 'element-plus'
 import Notices from '@/assets/data/notices.json'
 import scheduleData from '@/assets/data/schedule.json'
-import apps from '@/assets/data/apps.json'
+import appsData from '@/assets/data/apps.json'
+import allAppsData from '@/assets/data/allApps.json'
 
 // 预加载 assets 目录下所有图标
 const iconModules = import.meta.glob('../../assets/ico_but*.png', { eager: true })
@@ -212,18 +235,37 @@ for (const [path, mod] of Object.entries(iconModules)) {
   iconMap[filename] = mod.default
 }
 
+function withIcon(app) {
+  return { ...app, iconUrl: iconMap[app.img] || '' }
+}
+
+// 响应式应用列表
+const myApps = ref(appsData.map(withIcon))
+const availableApps = ref(allAppsData.map(withIcon))
+
 // 为每个 app 解析图标 URL
-const appsWithIcons = computed(() => apps.map(app => ({
-  ...app,
-  iconUrl: iconMap[app.img] || ''
-})))
+const appsWithIcons = computed(() => myApps.value)
+const allAppsWithIcons = computed(() => availableApps.value)
+
+// 添加到我的应用
+function addToMyApps(index) {
+  const app = availableApps.value.splice(index, 1)[0]
+  myApps.value.push(app)
+}
+
+// 从我的应用移除
+function removeFromMyApps(index) {
+  const app = myApps.value.splice(index, 1)[0]
+  availableApps.value.push(app)
+}
 
 const router = useRouter()
 
+// ===== 修改应用弹窗 =====
+const dialogVisible = ref(false)
+
 function openSetting() {
-  ElMessageBox.alert('这是一个弹窗', '提示', {
-    confirmButtonText: '确定',
-  })
+  dialogVisible.value = true
 }
 
 function logout() {
@@ -237,10 +279,16 @@ function Userinfo() {
   router.push('/userinfo')
 }
 
+const menuRouteMap = {
+  '2-1': '/userinfo',
+  '4-1': '/userinfo',
+  '4-2': '/grade',
+}
+
 const handleSelect = (key, keyPath) => {
   console.log(key, keyPath)
-  if (key === '4-2') {
-    router.push('/grade')
+  if (menuRouteMap[key]) {
+    router.push(menuRouteMap[key])
   }
 }
 
@@ -253,8 +301,8 @@ const appRouteMap = {
   1: '/schedule',
   2: '/userinfo',
   3: '/grade',
-  // 4: '/classinfo',
-  // 5: '/selectcourse',
+  4: '/classmate',
+  // 5: '/selectcourse',  
   // 6: '/teacherquery',
 }
 
@@ -465,6 +513,18 @@ function loadMoreMsg() {
   font-size: 12px;
   color: #606266;
   text-align: center;
+}
+
+.dialog-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #303133;
+  margin-bottom: 10px;
+}
+
+.dialog-grid {
+  padding: 0;
+  gap: 12px 8px;
 }
 
 /* ---- 内容区 ---- */
