@@ -7,6 +7,8 @@ import GradeView from '../views/Grade/index.vue'
 import NotisDetail from '../views/noticedetail/index.vue'
 import ScheduleView from '../views/Schedule/index.vue'
 import ClassmateSearch from '../views/ClassmateSearch/index.vue'
+import CourseSelection from '../views/CourseSelection/index.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,6 +52,11 @@ const router = createRouter({
       name: 'classmate',
       component: ClassmateSearch,
     },
+    {
+      path: '/course',
+      name: 'course',
+      component: CourseSelection,
+    }
 
   ],
 })

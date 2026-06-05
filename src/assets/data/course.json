@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "大学美育",
+    "teacher": "周雅婷",
+    "classroom": "J1-301"
+  },
+  {
+    "id": 2,
+    "name": "大学心理健康教育",
+    "teacher": "陈思远",
+    "classroom": "线上"
+  },
+  {
+    "id": 3,
+    "name": "习近平新时代特色社会主义思想概论",
+    "teacher": "马丽华",
+    "classroom": "J4-501"
+  },
+  {
+    "id": 4,
+    "name": "人工智能导论",
+    "teacher": "王磊",
+    "classroom": "S1-203"
+  },
+  {
+    "id": 5,
+    "name": "聆听心声：音乐审美分析",
+    "teacher": "林芳",
+    "classroom": "线上"
+  },
+  {
+    "id": 6,
+    "name": "大国兵器",
+    "teacher": "刘志强",
+    "classroom": "J2-108"
+  },
+  {
+    "id": 7,
+    "name": "玩转AIGC：AI工具实践课",
+    "teacher": "赵明",
+    "classroom": "线上"
+  },
+  {
+    "id": 8,
+    "name": "《时间简史》导读",
+    "teacher": "张建国",
+    "classroom": "J3-205"
+  },
+  {
+    "id": 9,
+    "name": "信息技术基础",
+    "teacher": "吴昊",
+    "classroom": "S2-401"
+  },
+  {
+    "id": 10,
+    "name": "军事理论",
+    "teacher": "孙志刚",
+    "classroom": "线上"
+  }
+]

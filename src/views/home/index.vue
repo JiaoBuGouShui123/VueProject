@@ -281,6 +281,7 @@ function Userinfo() {
 
 const menuRouteMap = {
   '2-1': '/userinfo',
+  '3-1': '/course',
   '4-1': '/userinfo',
   '4-2': '/grade',
 }
