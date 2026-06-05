@@ -30,7 +30,7 @@ const code = ref('')
 const router = useRouter()
 
 function login() {
-	if (username.value == "19516211183" && code.value == "123456") {
+	if (username.value == "11111111111" && code.value == "123456") {
 		router.push('/home')
 	}
 }

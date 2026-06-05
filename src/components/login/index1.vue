@@ -26,7 +26,7 @@ const password = ref('')
 const router = useRouter()
 
 function login() {
-    if(username.value=="2024130065"&&password.value=="jsei223055"){
+    if(username.value=="2024130065"&&password.value=="123456"){
 			router.push('/home')
 		}
 }
